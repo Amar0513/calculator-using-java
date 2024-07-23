@@ -1,0 +1,164 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class Calculator extends JFrame implements ActionListener {
+
+    private JTextField display;
+    private JButton[] numberButtons;
+    private JButton[] functionButtons;
+    private JButton addButton, subButton, mulButton, divButton;
+    private JButton decButton, equButton, clrButton, delButton, plusMinusButton;
+    private JPanel panel;
+
+    private double num1 = 0, num2 = 0, result = 0;
+    private char operator;
+
+    public Calculator() {
+        super("Calculator");
+        setLayout(new BorderLayout());
+        setSize(400, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setResizable(false);
+
+
+        display = new JTextField();
+        display.setEditable(false);
+        display.setHorizontalAlignment(JTextField.RIGHT);
+        add(display, BorderLayout.NORTH);
+
+
+        numberButtons = new JButton[10];
+        panel = new JPanel(new GridLayout(4, 3, 10, 10));
+        for (int i = 0; i < 10; i++) {
+            numberButtons[i] = new JButton(String.valueOf(i));
+            numberButtons[i].addActionListener(this);
+            panel.add(numberButtons[i]);
+        }
+
+
+        functionButtons = new JButton[6];
+        functionButtons[0] = addButton = new JButton("+");
+        functionButtons[1] = subButton = new JButton("-");
+        functionButtons[2] = mulButton = new JButton("*");
+        functionButtons[3] = divButton = new JButton("/");
+        functionButtons[4] = decButton = new JButton(".");
+        functionButtons[5] = equButton = new JButton("=");
+
+        for (int i = 0; i < 6; i++) {
+            functionButtons[i].addActionListener(this);
+            panel.add(functionButtons[i]);
+        }
+
+
+        clrButton = new JButton("C");
+        delButton = new JButton("Del");
+        plusMinusButton = new JButton("+/-");
+
+        clrButton.addActionListener(this);
+        delButton.addActionListener(this);
+        plusMinusButton.addActionListener(this);
+
+        panel.add(clrButton);
+        panel.add(delButton);
+        panel.add(plusMinusButton);
+
+        add(panel, BorderLayout.CENTER);
+
+        setVisible(true);
+    }
+
+    public Calculator(JButton[] numberButtons) {
+        this.numberButtons = numberButtons;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        for (int i = 0; i < 10; i++) {
+            if (e.getSource() == numberButtons[i]) {
+                display.setText(display.getText().concat(String.valueOf(i)));
+            }
+        }
+
+        if (e.getSource() == decButton) {
+            display.setText(display.getText().concat("."));
+        }
+
+        if (e.getSource() == addButton) {
+            num1 = Double.parseDouble(display.getText());
+            operator = '+';
+            display.setText("");
+        }
+
+        if (e.getSource() == subButton) {
+            num1 = Double.parseDouble(display.getText());
+            operator = '-';
+            display.setText("");
+        }
+
+        if (e.getSource() == mulButton) {
+            num1 = Double.parseDouble(display.getText());
+            operator = '*';
+            display.setText("");
+        }
+
+        if (e.getSource() == divButton) {
+            num1 = Double.parseDouble(display.getText());
+            operator = '/';
+            display.setText("");
+        }
+
+        if (e.getSource() == equButton) {
+            num2 = Double.parseDouble(display.getText());
+
+            switch (operator) {
+                case '+':
+                    result = num1 + num2;
+                    break;
+                case '-':
+                    result = num1 - num2;
+                    break;
+                case '*':
+                    result = num1 * num2;
+                    break;
+                case '/':
+                    if (num2 == 0) {
+                        display.setText("Error");
+                    } else {
+                        result = num1 / num2;
+                    }
+                    break;
+            }
+
+            display.setText(String.valueOf(result));
+        }
+
+        if (e.getSource() == clrButton) {
+            display.setText("");
+        }
+
+        if (e.getSource() == delButton) {
+            String string = display.getText();
+            if (string.length() > 0) {
+                display.setText(string.substring(0, string.length() - 1));
+            }
+        }
+
+        if (e.getSource() == plusMinusButton) {
+            String string = display.getText();
+            if (!string.equals("")) {
+                if (string.charAt(0) == '-') {
+                    display.setText(string.substring(1));
+                } else {
+                    display.setText("-" + string);
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        new Calculator();
+    }
+}
